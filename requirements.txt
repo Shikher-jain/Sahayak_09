@@ -1,36 +1,28 @@
 # Streamlit frontend
+# Streamlit frontend
 streamlit
 
 # Backend & API
 fastapi
 uvicorn
-python-dotenv
 pydantic
 requests
-beautifulsoup4
 pdfplumber
-pdfminer.six
-pymupdf
 python-multipart
 chromadb
+
 # ML & Embeddings
 torch
 transformers
 sentence-transformers
-scikit-learn
 numpy
 
 # Cosdata SDK
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
-# Image & OCR
+# Image
 Pillow
-pytesseract
 
-# Audio/Video
+# Audio
 torchaudio
-openai-whisper
-
-# For cloud video/image processing (if needed)
-opencv-python-headless
-ffmpeg-python
+soundfile

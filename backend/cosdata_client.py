@@ -40,10 +40,9 @@ class CosDataClient:
 
         else:
             print("💾 Using Local ChromaDB (No API key required)")
-            self.client = chromadb.Client(Settings(chroma_db_impl="duckdb+parquet"))
+            self.client = chromadb.PersistentClient(path="./chromadb_data")
             self.collection = self.client.get_or_create_collection(
-                name="multimodal_local",
-                embedding_function=None
+                name="multimodal_local"
             )
 
     def embed_text(self, text):
