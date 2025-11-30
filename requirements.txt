@@ -22,3 +22,26 @@ cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
 # For image processing
 # (video processing now handled by CosData cloud)
+
+
+# -----------------------
+
+fastapi
+uvicorn
+python-dotenv
+pydantic
+streamlit
+sentence-transformers
+transformers
+torch
+openai-whisper
+opencv-python-headless
+pytesseract
+python-multipart
+Pillow
+ffmpeg-python
+requests
+cosdata
+numpy
+pdfminer.six
+pymupdf
