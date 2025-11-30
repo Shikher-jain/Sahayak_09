@@ -58,14 +58,25 @@ class CosDataClient:
         else:
             vector = self.embed_image(image_path)
 
-        vector_id = metadata.get("id") if metadata else None
+        # Always ensure vector_id is a string
+        if metadata is None:
+            metadata = {}
+        vector_id = metadata.get("id")
+        if not vector_id or not isinstance(vector_id, str):
+            if image_path:
+                vector_id = os.path.basename(image_path)
+            elif text:
+                vector_id = str(hash(text))
+            else:
+                vector_id = "vector_" + str(np.random.randint(1e9))
+            metadata["id"] = vector_id
 
         if USE_COSDATA:
             self.collection.upsert_vector({
                 "id": vector_id,
                 "dense_values": vector,
                 "text": text or "",
-                "metadata": metadata or {},
+                "metadata": metadata,
             })
         else:
             self.collection.add(

@@ -30,5 +30,7 @@ class PDFIngestor:
         for idx, chunk in enumerate(chunks):
             meta = metadata.copy() if metadata else {}
             meta['chunk'] = idx
+            # Ensure a unique string ID for each chunk
+            meta['id'] = meta.get('id', f"{os.path.basename(pdf_path)}_chunk_{idx}")
             self.cos_client.insert_vector(text=chunk, metadata=meta)
         print(f"Ingested {len(chunks)} chunks from {pdf_path}")

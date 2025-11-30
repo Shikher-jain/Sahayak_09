@@ -15,5 +15,7 @@ class ImageIngestor:
 
         meta = metadata.copy() if metadata else {}
         meta['source'] = os.path.basename(image_path)
+        # Ensure 'id' is present and is a string
+        meta['id'] = meta.get('id', os.path.basename(image_path))
         self.cos_client.insert_vector(image_path=image_path, metadata=meta)
         print(f"Ingested image: {image_path}")
