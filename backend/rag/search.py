@@ -1,6 +1,7 @@
 # backend/rag/search.py
 
 from backend.cosdata_client import CosDataClient
+from backend.main import CosDataClient
 
 class RAGSearcher:
     def __init__(self):
