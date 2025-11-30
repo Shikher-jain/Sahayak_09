@@ -1,7 +1,9 @@
 # frontend/components/search.py
 
 import streamlit as st
-from backend.rag.search import RAGSearcher
+import requests
+
+BACKEND_URL = "https://sahayak-09.onrender.com"
 
 def show_search_ui():
     st.header("🔍 Semantic Search")
@@ -13,28 +15,26 @@ def show_search_ui():
         query_text = st.text_input("Enter search text:")
         if st.button("Search") and query_text:
             st.info("Searching...")
-            searcher = RAGSearcher()
-            results = searcher.query(query_text=query_text, top_k=top_k)
+            try:
+                resp = requests.post(f"{BACKEND_URL}/search", json={"query": query_text, "top_k": top_k}, timeout=20)
+                if not resp.ok:
+                    st.error("Search failed on backend")
+                    return
+                results = resp.json().get("results", [])
+            except Exception as e:
+                st.error(f"Search error: {e}")
+                return
+
             if not results:
                 st.warning("No results found!")
                 return
             st.success(f"Top {len(results)} results:")
             for idx, item in enumerate(results):
-                st.markdown(f"**Result {idx+1}:** {item['text']}")
-                st.markdown(f"**Metadata:** {item['metadata']}")
+                st.markdown(f"**Result {idx+1}:** {item.get('text','')}")
+                st.markdown(f"**Metadata:** {item.get('metadata',{})}")
                 st.markdown("---")
 
     elif search_type == "Image Query":
         uploaded_file = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"])
         if uploaded_file and st.button("Search Image"):
-            st.info("Searching using image...")
-            searcher = RAGSearcher()
-            results = searcher.query(query_image_path=uploaded_file, top_k=top_k)
-            if not results:
-                st.warning("No results found!")
-                return
-            st.success(f"Top {len(results)} results:")
-            for idx, item in enumerate(results):
-                st.markdown(f"**Result {idx+1}:** {item['text']}")
-                st.markdown(f"**Metadata:** {item['metadata']}")
-                st.markdown("---")
+            st.info("Image search is not enabled in this lightweight deployment.\nUse text search or add a backend image-search endpoint.")
