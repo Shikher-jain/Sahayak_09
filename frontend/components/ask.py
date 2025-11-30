@@ -1,8 +1,11 @@
 # frontend/components/ask.py
 
+
+
 import streamlit as st
-from backend.rag.search import RAGSearcher
-from backend.processing.summarization import Summarizer
+import requests
+
+BACKEND_URL = "https://sahayak-09.onrender.com"
 
 def show_ask_ui():
     st.header("💬 Ask a Question")
@@ -12,10 +15,16 @@ def show_ask_ui():
 
     if st.button("Get Answer") and query:
         st.info("Fetching relevant context...")
-        rag_searcher = RAGSearcher()
-        summarizer = Summarizer()
+        try:
+            response = requests.post(f"{BACKEND_URL}/rag/search", json={"query": query, "top_k": top_k})
+            if not response.ok:
+                st.error("RAG search failed!")
+                return
+            results = response.json().get("results", [])
+        except Exception as e:
+            st.error(f"Error: {e}")
+            return
 
-        results = rag_searcher.query(query_text=query, top_k=top_k)
         if not results:
             st.warning("No relevant data found!")
             return
@@ -23,8 +32,13 @@ def show_ask_ui():
         st.success(f"Top {len(results)} relevant chunks retrieved:")
 
         for idx, item in enumerate(results):
-            st.markdown(f"**Chunk {idx+1}:** {item['text']}")
-            summary = summarizer.summarize_text(item['text'])
+            st.markdown(f"**Chunk {idx+1}:** {item.get('text', '')}")
+            # Summarize via backend API
+            try:
+                sum_resp = requests.post(f"{BACKEND_URL}/summarize", json={"text": item.get('text', '')})
+                summary = sum_resp.json().get("summary", "") if sum_resp.ok else "(summary failed)"
+            except Exception:
+                summary = "(summary failed)"
             st.markdown(f"**Summary:** {summary}")
-            st.markdown(f"**Metadata:** {item['metadata']}")
+            st.markdown(f"**Metadata:** {item.get('metadata', {})}")
             st.markdown("---")

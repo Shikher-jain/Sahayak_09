@@ -1,4 +1,6 @@
-# Streamlit frontend
+# Sahayak_09 requirements
+
+# Frontend
 streamlit
 
 # Backend & API
@@ -8,20 +10,8 @@ pydantic
 requests
 pdfplumber
 python-multipart
-chromadb
-
-# ML & Embeddings
-torch
-transformers
-sentence-transformers
-numpy
-
-# Cosdata SDK
-cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
-
-# Image
 Pillow
-
-# Audio
-torchaudio
-soundfile
+# Optional: Only one vector DB, not both
+chromadb
+# OR
+# cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
