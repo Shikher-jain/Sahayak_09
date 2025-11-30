@@ -23,8 +23,8 @@ It provides **semantic search, summarization, RAG-based question answering, reco
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/sahayak.git
-cd sahayak
+git clone https://github.com/Shikher-jain/Sahayak_09
+cd Sahayak_09
 pip install -r requirements.txt
 ````
 
