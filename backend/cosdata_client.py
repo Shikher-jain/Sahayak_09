@@ -9,10 +9,13 @@ import numpy as np
 class CosDataClient:
     def __init__(self):
         # Cosdata connection
+        host = os.environ.get("COSDATA_HOST", "http://localhost:8000")
+        username = os.environ.get("COSDATA_USER", "admin")
+        password = os.environ.get("COSDATA_PASS", "admin")
         self.client = Client(
-            host=os.environ.get("COSDATA_HOST"),
-            username=os.environ.get("COSDATA_USER"),
-            password=os.environ.get("COSDATA_PASS"),
+            host=host,
+            username=username,
+            password=password,
             verify=True
         )
         self.collection = self.client.get_or_create_collection(

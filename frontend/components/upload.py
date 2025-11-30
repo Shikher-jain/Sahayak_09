@@ -1,6 +1,9 @@
-# frontend/components/upload.py
+# frontend/pip install moviepymponents/upload.py
 
 import streamlit as st
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
 from backend.ingestion.pdf import PDFIngestor
 from backend.ingestion.image import ImageIngestor
 from backend.ingestion.url import URLIngestor

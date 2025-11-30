@@ -1,7 +1,13 @@
 # frontend/app.py
 
 import streamlit as st
-from frontend.components import upload, ask, search, recommend, advanced_ui
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), './')))
+import components.upload as upload
+import components.ask as ask
+import components.search as search
+import components.recommend as recommend
+import components.advanced_ui as advanced_ui
 
 st.set_page_config(page_title="Sahayak - Multimodal AI Assistant", layout="wide")
 
