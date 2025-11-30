@@ -45,3 +45,5 @@ cosdata
 numpy
 pdfminer.six
 pymupdf
+
+cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
