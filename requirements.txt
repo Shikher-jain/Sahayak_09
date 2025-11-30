@@ -12,7 +12,7 @@ pdfplumber
 pdfminer.six
 pymupdf
 python-multipart
-
+chromadb
 # ML & Embeddings
 torch
 transformers
