@@ -1,49 +1,36 @@
-
 # Streamlit frontend
 streamlit
 
-# Backend
+# Backend & API
 fastapi
 uvicorn
+python-dotenv
+pydantic
 requests
 beautifulsoup4
 pdfplumber
-Pillow
-torchaudio
+pdfminer.six
+pymupdf
+python-multipart
+
+# ML & Embeddings
 torch
 transformers
 sentence-transformers
 scikit-learn
 numpy
-python-dateutil
 
 # Cosdata SDK
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
-# For image processing
-# (video processing now handled by CosData cloud)
-
-
-# -----------------------
-
-fastapi
-uvicorn
-python-dotenv
-pydantic
-streamlit
-sentence-transformers
-transformers
-torch
-openai-whisper
-opencv-python-headless
-pytesseract
-python-multipart
+# Image & OCR
 Pillow
-ffmpeg-python
-requests
-cosdata
-numpy
-pdfminer.six
-pymupdf
+pytesseract
 
-cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
+# Audio/Video
+torchaudio
+openai-whisper
+
+# For cloud video/image processing (if needed)
+opencv-python-headless
+ffmpeg-python
