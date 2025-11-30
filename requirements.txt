@@ -1,25 +1,25 @@
+
 # Streamlit frontend
-streamlit==1.26.0
+streamlit
 
 # Backend
-fastapi==0.109.2
-uvicorn==0.23.2
-requests==2.31.0
-beautifulsoup4==4.12.2
-pdfplumber==0.10.1
-Pillow==10.0.0
-moviepy==1.0.3
-torchaudio==2.3.2
-torch==2.3.1
-transformers==4.42.2
-sentence-transformers==2.2.2
-scikit-learn==1.3.1
-numpy==1.26.5
-python-dateutil==2.8.2
+fastapi
+uvicorn
+requests
+beautifulsoup4
+pdfplumber
+Pillow
+torchaudio
+torch
+transformers
+sentence-transformers
+scikit-learn
+numpy
+python-dateutil
 
-# Optional / Cosdata SDK
+# Cosdata SDK
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
-
 # For video frames and image processing
-opencv-python==4.8.1.78
+opencv-python
+ffmpeg-python
