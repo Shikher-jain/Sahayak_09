@@ -1,7 +1,9 @@
 # frontend/components/recommend.py
 
 import streamlit as st
-from backend.rag.recommend import Recommender
+import requests
+
+BACKEND_URL = "https://sahayak-09.onrender.com"
 
 def show_recommend_ui():
     st.header("✨ Recommendations")
@@ -11,13 +13,21 @@ def show_recommend_ui():
 
     if st.button("Get Recommendations") and query_text:
         st.info("Fetching recommendations...")
-        recommender = Recommender()
-        results = recommender.recommend(query_text=query_text, top_k=top_k)
+        try:
+            resp = requests.post(f"{BACKEND_URL}/recommend", json={"query": query_text, "top_k": top_k}, timeout=20)
+            if not resp.ok:
+                st.error("Recommendation failed on backend")
+                return
+            results = resp.json().get("results", [])
+        except Exception as e:
+            st.error(f"Recommendation error: {e}")
+            return
+
         if not results:
             st.warning("No recommendations found!")
             return
         st.success(f"Top {len(results)} recommendations:")
         for idx, item in enumerate(results):
-            st.markdown(f"**Recommendation {idx+1}:** {item['text']}")
-            st.markdown(f"**Metadata:** {item['metadata']}")
+            st.markdown(f"**Recommendation {idx+1}:** {item.get('text','')}")
+            st.markdown(f"**Metadata:** {item.get('metadata',{})}")
             st.markdown("---")
