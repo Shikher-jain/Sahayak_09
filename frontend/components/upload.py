@@ -2,14 +2,7 @@
 
 import streamlit as st
 
-import sys, os, tempfile
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-
-from backend.ingestion.pdf import PDFIngestor
-from backend.ingestion.image import ImageIngestor
-from backend.ingestion.url import URLIngestor
-from backend.ingestion.audio import AudioIngestor
-from backend.ingestion.video import VideoIngestor
+import sys, os, tempfile, requests
 
 def show_upload_ui():
     st.header("📁 Upload & Ingest Files")
@@ -24,9 +17,13 @@ def show_upload_ui():
             temp_path = os.path.join(temp_dir, uploaded_file.name)
             with open(temp_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
-            pdf_ingestor = PDFIngestor()
-            pdf_ingestor.ingest_pdf(temp_path)
-            st.success("PDF ingested successfully!")
+            with open(temp_path, "rb") as f:
+                files = {"file": (uploaded_file.name, f, "application/pdf")}
+                response = requests.post("https://sahayak-09.onrender.com/upload/pdf", files=files)
+            if response.ok:
+                st.success("PDF ingested successfully!")
+            else:
+                st.error("PDF ingestion failed!")
 
     elif upload_type == "Image":
         uploaded_file = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"])
@@ -35,9 +32,13 @@ def show_upload_ui():
             temp_path = os.path.join(temp_dir, uploaded_file.name)
             with open(temp_path, "wb") as f:
                 f.write(uploaded_file.getbuffer())
-            image_ingestor = ImageIngestor()
-            image_ingestor.ingest_image(temp_path)
-            st.success("Image ingested successfully!")
+            with open(temp_path, "rb") as f:
+                files = {"file": (uploaded_file.name, f, "image/png")}
+                response = requests.post("https://sahayak-09.onrender.com/upload/image", files=files)
+            if response.ok:
+                st.success("Image ingested successfully!")
+            else:
+                st.error("Image ingestion failed!")
 
     elif upload_type == "URL":
         url = st.text_input("Enter URL")
