@@ -1,5 +1,5 @@
-# frontend/components/advanced_ui.py
 
+# frontend/components/advanced_ui.py
 import streamlit as st
 import requests
 
