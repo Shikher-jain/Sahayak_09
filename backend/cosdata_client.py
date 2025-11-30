@@ -4,39 +4,72 @@ import os
 from cosdata import Client
 from sentence_transformers import SentenceTransformer
 from PIL import Image
-import numpy as np
 
 class CosDataClient:
     def __init__(self):
-        # Cosdata connection
-        host = os.environ.get("COSDATA_HOST", "http://localhost:8000")
-        username = os.environ.get("COSDATA_USER", "admin")
-        password = os.environ.get("COSDATA_PASS", "admin")
+        # Cloud-safe API host
+        host = os.getenv("COSDATA_HOST", "https://api.cosdata.io")
+
+        # API Key authentication (the correct method)
+        api_key = os.getenv("COSDATA_API_KEY")
+
+        if not api_key:
+            raise ValueError(
+                "COSDATA_API_KEY is missing. "
+                "Add it inside Streamlit → Settings → Secrets."
+            )
+
+        # Initialize CosData client
         self.client = Client(
             host=host,
-            username=username,
-            password=password,
-            verify=True
+            api_key=api_key,
+            verify=False        # IMPORTANT: Fixes SSL errors on Streamlit Cloud
         )
+
+        # Create collection once
         self.collection = self.client.get_or_create_collection(
             name="multimodal_knowledge",
-            dimension=384  # default MiniLM dimension
+            dimension=384       # MiniLM dimension
         )
 
-        # HuggingFace models
-        self.text_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-        self.image_model = SentenceTransformer('clip-ViT-B-32')  # CLIP embeddings
+        # Lazy loading (faster startup)
+        self.text_model = None
+        self.image_model = None
 
+    # -------------------------------
+    #   HF Model Loaders
+    # -------------------------------
+    def load_text_model(self):
+        if self.text_model is None:
+            self.text_model = SentenceTransformer(
+                "sentence-transformers/all-MiniLM-L6-v2"
+            )
+        return self.text_model
+
+    def load_image_model(self):
+        if self.image_model is None:
+            self.image_model = SentenceTransformer("clip-ViT-B-32")
+        return self.image_model
+
+    # -------------------------------
+    #   Embedding Functions
+    # -------------------------------
     def embed_text(self, text: str):
-        return self.text_model.encode(text).tolist()
+        model = self.load_text_model()
+        return model.encode(text).tolist()
 
     def embed_image(self, image_path: str):
-        image = Image.open(image_path).convert('RGB')
-        return self.image_model.encode([image])[0].tolist()
+        model = self.load_image_model()
+        img = Image.open(image_path).convert("RGB")
+        return model.encode([img])[0].tolist()
 
+    # -------------------------------
+    #   Insert Vector into CosData
+    # -------------------------------
     def insert_vector(self, text=None, image_path=None, metadata=None):
-        """Insert text or image embedding into Cosdata"""
-        vector = None
+        if not metadata:
+            metadata = {}
+
         if text:
             vector = self.embed_text(text)
         elif image_path:
@@ -44,17 +77,17 @@ class CosDataClient:
         else:
             raise ValueError("Either text or image_path must be provided")
 
-        vector_id = metadata.get("id") if metadata and "id" in metadata else None
         self.collection.upsert_vector({
-            "id": vector_id,
+            "id": metadata.get("id"),
             "dense_values": vector,
             "text": text or "",
-            "metadata": metadata or {}
+            "metadata": metadata
         })
 
+    # -------------------------------
+    #   Query CosData
+    # -------------------------------
     def query_vectors(self, query_text=None, query_image_path=None, top_k=5):
-        """Query Cosdata with text or image"""
-        vector = None
         if query_text:
             vector = self.embed_text(query_text)
         elif query_image_path:
@@ -62,9 +95,29 @@ class CosDataClient:
         else:
             raise ValueError("Either query_text or query_image_path must be provided")
 
-        results = self.collection.search.dense(
+        return self.collection.search.dense(
             query_vector=vector,
             top_k=top_k,
             return_raw_text=True
         )
-        return results
+
+    # -------------------------------
+    #   Video / Audio Ingestion (SDK)
+    # -------------------------------
+    def ingest_video(self, video_bytes, metadata=None):
+        return self.client.ingest.video(
+            file_bytes=video_bytes,
+            metadata=metadata or {}
+        )
+
+    def ingest_audio(self, audio_bytes, metadata=None):
+        return self.client.ingest.audio(
+            file_bytes=audio_bytes,
+            metadata=metadata or {}
+        )
+
+    def ingest_image(self, image_bytes, metadata=None):
+        return self.client.ingest.image(
+            file_bytes=image_bytes,
+            metadata=metadata or {}
+        )
