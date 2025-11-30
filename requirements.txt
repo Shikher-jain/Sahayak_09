@@ -20,6 +20,5 @@ python-dateutil
 # Cosdata SDK
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
-# For video frames and image processing
-opencv-python
-ffmpeg-python
+# For image processing
+# (video processing now handled by CosData cloud)
