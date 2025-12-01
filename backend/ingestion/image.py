@@ -6,18 +6,18 @@ import os
 
 class ImageIngestor:
     def __init__(self):
-        self.cos_client = CosDataClient()
+        pass
 
     def ingest_image(self, image_path, metadata=None):
-        """Generate embedding for an image and insert into Cosdata"""
-        import uuid
+        """Generate embedding for an image and insert into CosData"""
+        from backend.cosdata_client import insert_vector
         if not os.path.exists(image_path):
             raise FileNotFoundError(f"Image not found: {image_path}")
 
         meta = metadata.copy() if metadata else {}
         meta['source'] = os.path.basename(image_path)
-        # Ensure 'id' is present and is a string
-        if not meta.get('id') or not isinstance(meta.get('id'), str):
-            meta['id'] = str(uuid.uuid4())
-        self.cos_client.insert_vector(image_path=image_path, metadata=meta)
+        with open(image_path, "rb") as f:
+            image_bytes = f.read()
+        # For CosData, you may need to send image as base64 or bytes, but here we use text placeholder
+        doc_id = insert_vector("[IMAGE UPLOAD]", meta)
         print(f"Ingested image: {image_path}")

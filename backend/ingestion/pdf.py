@@ -5,7 +5,6 @@ from backend.cosdata_client import CosDataClient
 
 class PDFIngestor:
     def __init__(self):
-        self.cos_client = CosDataClient()
         self.chunk_size = 500  # number of words per chunk
 
     def read_pdf(self, pdf_path):
@@ -24,15 +23,13 @@ class PDFIngestor:
         return chunks
 
     def ingest_pdf(self, pdf_path, metadata=None):
-        """Read PDF, chunk text, generate embeddings, insert into Cosdata"""
-        import uuid
+        """Read PDF, chunk text, generate embeddings, insert into CosData"""
+        from backend.cosdata_client import insert_vector
         text = self.read_pdf(pdf_path)
         chunks = self.chunk_text(text)
         for idx, chunk in enumerate(chunks):
             meta = metadata.copy() if metadata else {}
             meta['chunk'] = idx
-            # Ensure a unique string ID for each chunk
-            if not meta.get('id') or not isinstance(meta.get('id'), str):
-                meta['id'] = str(uuid.uuid4())
-            self.cos_client.insert_vector(text=chunk, metadata=meta)
+            meta['source'] = os.path.basename(pdf_path)
+            doc_id = insert_vector(chunk, meta)
         print(f"Ingested {len(chunks)} chunks from {pdf_path}")
