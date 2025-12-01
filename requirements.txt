@@ -13,3 +13,7 @@ pdfplumber
 
 # CosData Cloud SDK (official)
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
+
+# MySQL connector
+mysql-connector-python
+python-dotenv

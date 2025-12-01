@@ -1,12 +1,19 @@
 import mysql.connector
 from mysql.connector import Error
 
-# Fill in your MySQL connection details here
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+# Load environment variables from project root .env file
+env_path = Path(__file__).resolve().parent.parent / '.env'
+load_dotenv(dotenv_path=env_path)
+
 MYSQL_CONFIG = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': 'password',
-    'database': 'sahayak_db'
+    'host': os.getenv('MYSQL_HOST', 'localhost'),
+    'user': os.getenv('MYSQL_USER', 'root'),
+    'password': os.getenv('MYSQL_PASSWORD', 'password'),
+    'database': os.getenv('MYSQL_DATABASE', 'sahayak_db')
 }
 
 def get_db_connection():
