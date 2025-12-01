@@ -8,4 +8,6 @@ services:
     envVars:
       # Add secret keys here for deployment. For local development, use .env file.
     plan: free
+ 
     autoDeploy: true
+ 
