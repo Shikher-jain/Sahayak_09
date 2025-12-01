@@ -3,3 +3,13 @@ venv/
 
 __pycache__/
 *.pyc
+
+# Ignore frontend .env if present
+frontend/.env
+
+# Ignore log files
+*.log
+
+# Ignore OS generated files
+Thumbs.db
+.DS_Store
