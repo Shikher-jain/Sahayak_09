@@ -3,10 +3,16 @@
 import os
 from cosdata import Client
 
-COSDATA_API_KEY = os.getenv("COSDATA_API_KEY")
-COSDATA_HOST = os.getenv("COSDATA_HOST", "https://api.cosdata.io")
+COSDATA_HOST = os.getenv("COSDATA_HOST", "http://127.0.0.1:8443")
+COSDATA_USER = os.getenv("COSDATA_USER", "admin")
+COSDATA_PASS = os.getenv("COSDATA_PASS", "admin")
 
-client = Client(api_key=COSDATA_API_KEY, host=COSDATA_HOST)
+client = Client(
+    host=COSDATA_HOST,
+    username=COSDATA_USER,
+    password=COSDATA_PASS,
+    verify=False
+)
 
 def insert_vector(text, metadata):
     vector = client.embeddings.create(text=text)
