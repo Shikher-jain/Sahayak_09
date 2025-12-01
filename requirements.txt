@@ -11,9 +11,10 @@ python-multipart
 Pillow
 pdfplumber
 
-# CosData Cloud SDK (official)
+# CosData Cloud SDK (official) - vector DB
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
-# MySQL connector
-mysql-connector-python
+# Firebase Auth
+pyrebase4
+# Env loader
 python-dotenv
