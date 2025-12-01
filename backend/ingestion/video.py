@@ -16,21 +16,18 @@ class VideoIngestor:
 
     def ingest_video(self, video_path, metadata=None):
         """Send full video to CosData for transcription + embeddings."""
-
+        import uuid
         if not os.path.exists(video_path):
             raise FileNotFoundError(f"Video not found: {video_path}")
 
         meta = metadata.copy() if metadata else {}
         meta["source"] = os.path.basename(video_path)
+        if not meta.get('id') or not isinstance(meta.get('id'), str):
+            meta['id'] = str(uuid.uuid4())
 
         with open(video_path, "rb") as f:
             video_bytes = f.read()
 
-        # CosData handles:
-        # - audio extraction
-        # - transcription
-        # - frame extraction
-        # - indexing + embeddings
         response = self.client.ingest_video(video_bytes, metadata=meta)
 
         return {

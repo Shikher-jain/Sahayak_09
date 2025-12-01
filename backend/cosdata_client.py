@@ -53,22 +53,19 @@ class CosDataClient:
         return self.image_model.encode([img])[0].tolist()
 
     def insert_vector(self, text=None, image_path=None, metadata=None):
+        import uuid
         if text:
             vector = self.embed_text(text)
-        else:
+        elif image_path:
             vector = self.embed_image(image_path)
+        else:
+            raise ValueError("Either text or image_path must be provided")
 
-        # Always ensure vector_id is a string
         if metadata is None:
             metadata = {}
         vector_id = metadata.get("id")
         if not vector_id or not isinstance(vector_id, str):
-            if image_path:
-                vector_id = os.path.basename(image_path)
-            elif text:
-                vector_id = str(hash(text))
-            else:
-                vector_id = "vector_" + str(np.random.randint(1e9))
+            vector_id = str(uuid.uuid4())
             metadata["id"] = vector_id
 
         if USE_COSDATA:
