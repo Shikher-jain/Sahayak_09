@@ -1,32 +1,30 @@
 # backend/rag/search.py
 
-from backend.cosdata_client import CosDataClient
-from backend.main import CosDataClient
+from backend.cosdata_client import search
 
 class RAGSearcher:
     def __init__(self):
-        self.cos_client = CosDataClient()
         self.top_k = 5  # Default number of results to retrieve
 
     def query(self, query_text=None, query_image_path=None, top_k=None):
         """
-        Perform semantic search using Cosdata
+        Perform semantic search using CosData
         - query_text: string query
-        - query_image_path: path to query image
+        - query_image_path: path to query image (not supported yet)
         - top_k: number of results
         Returns: list of matching chunks with metadata
         """
+        if not query_text:
+            return []
+        
         top_k = top_k or self.top_k
-        results = self.cos_client.query_vectors(
-            query_text=query_text,
-            query_image_path=query_image_path,
-            top_k=top_k
-        )
-        # Extract text and metadata
+        results = search(query_text)
+        
+        # Extract text and metadata from CosData results
         hits = []
         for item in results:
             hits.append({
-                "text": item.get("text", ""),
+                "text": item.get("content", ""),
                 "metadata": item.get("metadata", {})
             })
         return hits

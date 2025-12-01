@@ -1,12 +1,12 @@
 
 # CosData-only client for Sahayak
 import os
-from cosdata import CosDataClient
+from cosdata import Client
 
 COSDATA_API_KEY = os.getenv("COSDATA_API_KEY")
 COSDATA_HOST = os.getenv("COSDATA_HOST", "https://api.cosdata.io")
 
-client = CosDataClient(api_key=COSDATA_API_KEY, host=COSDATA_HOST)
+client = Client(api_key=COSDATA_API_KEY, host=COSDATA_HOST)
 
 def insert_vector(text, metadata):
     vector = client.embeddings.create(text=text)

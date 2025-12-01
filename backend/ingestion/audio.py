@@ -1,11 +1,7 @@
 # backend/ingestion/audio.py
 
 import os
-import tempfile
-import torch
-import torchaudio
 from backend.cosdata_client import CosDataClient
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
 class AudioIngestor:
     def __init__(self):
