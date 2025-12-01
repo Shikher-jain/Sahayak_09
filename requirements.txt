@@ -1,4 +1,3 @@
-# Sahayak_09 requirements
 
 # Frontend
 streamlit
@@ -8,10 +7,9 @@ fastapi
 uvicorn
 pydantic
 requests
-pdfplumber
 python-multipart
 Pillow
-# Optional: Only one vector DB, not both
-chromadb
-# OR
-# cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
+pdfplumber
+
+# CosData Cloud SDK (official)
+cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
