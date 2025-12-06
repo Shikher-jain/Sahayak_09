@@ -1,5 +1,3 @@
-
-
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -30,6 +28,10 @@ def root():
 @app.get("/health")
 def health_check():
 	return {"status": "healthy"}
+
+@app.get("/status")
+def status():
+    return {"status": "healthy"}
 
 # Error handler
 @app.exception_handler(Exception)
