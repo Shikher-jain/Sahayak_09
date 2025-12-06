@@ -54,7 +54,7 @@ The database must keep running.
 ## **3️⃣ Clone This Repository**
 
 ```bash
-git clone https://github.com/<your-repo>/sahayak_09.git
+git clone https://github.com/Shikher-jain/Sahayak_09
 cd sahayak_09
 ```
 
@@ -224,4 +224,40 @@ MIT — free for academic + commercial use.
 # 🙌 Contributing
 
 Pull requests welcome.
+
+---
+
+# Sahayak Backend
+
+## Overview
+Sahayak is a multimodal application that uses **CosData OSS** as its primary vector database for storing and retrieving embeddings. It supports various data types, including PDFs, images, audio, and video.
+
+## Features
+- **PDF Ingestion**: Extracts text, generates embeddings, and stores them in CosData OSS.
+- **Search**: Queries the vector database to retrieve relevant results.
+- **Multimodal Support**: Handles text, images, audio, and video data.
+
+## Dependencies
+- `cosdata-sdk`: Official SDK for CosData OSS.
+- `transformers`, `torch`, `sentence-transformers`: For embedding generation.
+- `pdfplumber`: For PDF text extraction.
+
+## How to Run
+1. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Start the backend:
+   ```bash
+   uvicorn backend.main:app --host 0.0.0.0 --port 8000
+   ```
+3. Access the frontend at `http://localhost:8501`.
+
+## Configuration
+- Use the `.env` file to configure API keys and database URLs.
+- Ensure CosData OSS credentials are set up correctly.
+
+## Troubleshooting
+- If search returns no results, verify that vectors are being stored in CosData OSS.
+- Check logs for detailed error messages.
 

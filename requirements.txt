@@ -1,4 +1,3 @@
-
 # Frontend
 streamlit
 
@@ -14,7 +13,12 @@ pdfplumber
 # CosData Cloud SDK (official) - vector DB
 cosdata-sdk @ git+https://github.com/cosdata/cosdata-sdk-python.git
 
-# Firebase Auth
-pyrebase4
+# Added missing dependencies for embedding and audio processing
+transformers
+torch
+sentence-transformers
+
+torchaudio
+
 # Env loader
 python-dotenv
