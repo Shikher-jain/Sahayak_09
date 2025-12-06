@@ -1,35 +1,21 @@
 # backend/ingestion/pdf.py
 
 import pdfplumber
-from backend.cosdata_client import CosDataClient
+from backend.rag.embedder import Embedder
 
-class PDFIngestor:
-    def __init__(self):
-        self.chunk_size = 500  # number of words per chunk
+def ingest_pdf(pdf_path, cosdata_client):
+    embedder = Embedder()
+    text = ""
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() + "\n"
+    chunks = chunk_text(text)
+    for chunk in chunks:
+        vector = embedder.embed_text(chunk)
+        vector_id = embedder.generate_id()
+        metadata = {"source": pdf_path, "chunk": chunk[:30]}
+        cosdata_client.insert_vector(vector_id, vector, metadata)
 
-    def read_pdf(self, pdf_path):
-        text = ""
-        with pdfplumber.open(pdf_path) as pdf:
-            for page in pdf.pages:
-                text += page.extract_text() + "\n"
-        return text
-
-    def chunk_text(self, text):
-        words = text.split()
-        chunks = []
-        for i in range(0, len(words), self.chunk_size):
-            chunk = " ".join(words[i:i + self.chunk_size])
-            chunks.append(chunk)
-        return chunks
-
-    def ingest_pdf(self, pdf_path, metadata=None):
-        """Read PDF, chunk text, generate embeddings, insert into CosData"""
-        from backend.cosdata_client import insert_vector
-        text = self.read_pdf(pdf_path)
-        chunks = self.chunk_text(text)
-        for idx, chunk in enumerate(chunks):
-            meta = metadata.copy() if metadata else {}
-            meta['chunk'] = idx
-            meta['source'] = os.path.basename(pdf_path)
-            doc_id = insert_vector(chunk, meta)
-        print(f"Ingested {len(chunks)} chunks from {pdf_path}")
+def chunk_text(text, chunk_size=500):
+    words = text.split()
+    return [" ".join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
